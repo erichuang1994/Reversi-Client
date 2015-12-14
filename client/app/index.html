@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hands">
+<head>
+  <meta charset="UTF-8">
+  <title>reversi</title>
+  <link rel="stylesheet" href="ui.css">
+  <script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
+<script type="text/javascript" src="../node_modules/angular-animate/angular-animate.js"></script>
+<script type="text/javascript" src="./handler.js"></script>
+</head>
+<body ng-app="app" ng-controller="main">
+  <div id="error" ng-if="error">
+    <p>出错了。。。</p>
+  </div>
+<div id="login" ng-if="!isLogin">
+  <h2>登陆</h2>
+  <form ng-submit="login()">
+    <label>
+      <input type="text" ng-model="user.username" placeholder="您的昵称" autofocus>
+      <br>
+      <input type="text" ng-model="user.password" placeholder="密码(非管理员留空)" autofocus>
+      <br>
+      <input type="text" ng-model="user.addr" placeholder="127.0.0.1:3106">
+      <br>
+      <input type="submit" value="login">
+    </label>
+  </form>
+</div>
+<div id="container" ng-if="isLogin">
+<div id="room">
+    <p>hell world</p>
+</div>
+<div id="mapContainer">
+  <table id="chessboard">
+    <tr ng-repeat="row in board track by $index">
+      <td  ng-repeat="cell in row track by $index" ng-click="move($parent.$index,$index)">
+        <img class="point" ng-if="cell.isBlack" src="./black.png" alt=""/ >
+        <img  ng-if="cell.isWhite" src="./white.png" alt="" class="point"/ >
+      </td>
+    </tr>
+  </table>
+</div>
+</div>
+</body>
+</html>
