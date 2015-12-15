@@ -27,8 +27,13 @@
   </form>
 </div>
 <div id="container" ng-if="isLogin">
-<div id="room">
-    <p>hell world</p>
+<div id="sidebar">
+  <ul id="userlist">
+    <li ng-repeat="user in userList track by $index" class="free-{{user.free}}">
+      {{user.username}}
+      <small  class="status">{{user.status}}</small>
+    </li>
+  </ul>
 </div>
 <div id="mapContainer">
   <table id="chessboard">

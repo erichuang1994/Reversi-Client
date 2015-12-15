@@ -1,5 +1,5 @@
 body {
-  height: 329px;
+  height: 409px;
   width: 500px;
   margin: 0;
   font-family: helvetica, sans-serif;
@@ -42,34 +42,65 @@ body {
 
 #container{
   display: flex;
-display: -webkit-flex;
-flex-direction: row;
-height: 100%;
+  display: -webkit-flex;
+  flex-direction: row;
+  height: 100%;
 }
 #mapContainer{
   padding-top: 5em;
-  float: right;
   height:329px;
   width:329px;
-  margin:0px auto;
+  margin: 0 0 0 0;
 }
 #chessboard{
-align:center;
   background-color: #FAD388;
   border-collapse:collapse;
+  table-layout: fixed;
 }
 #chessboard td{
-  border:1px solid #553D16;
+  /*border:1px solid #553D16;*/
+  border:1px solid  #B78027;
   padding: 0px 0px 0px 0px;
   height:40px;
   width:40px;
 }
-#room {
-  float: left;
-  /*display: flex;*/
-  width: auto;
+#sidebar {
+  padding-top: 5em;
+  width: 171px;
   height: 329px;
-  background-color: white;
+}
+#sidebar li{
+  text-align:left;
+  margin: -1px 0 0 0;
+  border-top: 1px;
+  border-bottom: 1px;
+  border-left: 0px;
+  border-right: 0px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  font-size: 11px;
+}
+#userlist{
+  font-family: fantasy;
+  width: 100%;
+  padding-left: 0px;
+}
+#sidebar .status{
+  display: inline-block;
+  float: right;
+  font-family: fantasy;
+  color:green;
+}
+
+li.free-true{
+  margin: 0;
+  padding: 4px 7px 4px 5px;
+  cursor: pointer;
+  background: #fff;
+  display: block;
+}
+li.free-true:hover{
+  background: #F2F2F5;
 }
 img.point {
     position: relative;
