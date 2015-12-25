@@ -8,33 +8,47 @@ var Game=require('./game')
 app.controller('main',['$scope','$sce',handler]);
 
 function handler($scope,$sce){
-  $scope.isLogin=false;
-  $scope.isRoot=false;
   $scope.error=false;
+  $scope.count=false;
+  $scope.flag={
+    isLogin:false,
+    isRoot:false,
+    isStart:false,
+    showOpenGamePannel:false
+  };
   $scope.cmd={
     opengame:'',
     kickout:'',
     token:'',
-    closegame:''
+    closegame:'',
+    watch:''
   }
   $scope.userList=[]
+  $scope.gameList=[]
   $scope.user={
     username:'',
     addr:'',
     password:''
   };
-  console.log(typeof(Game));
+
+  $scope.currentNavigation='user';
+
   var game=new Game();
   $scope.game=game;
-  $scope.game.start();
+
   $scope.board=$scope.game.getBoard();
+
+  // handler调用的sender方法
+  // 当已经登录的时候自动附上token
+  //
   var send=function(msg){
-    if($scope.isLogin){
+    if($scope.flag.isLogin){
       ipc.send('msg',[msg,$scope.token].join(" "));
     }else{
       ipc.send('msg',msg);
     }
   };
+
   $scope.login=function () {
       if(!$scope.user.username){
         return
@@ -54,7 +68,16 @@ function handler($scope,$sce){
     }
   };
 
+  $scope.join=function(gamename){
+    send("JOIN "+gamename);
+  }
+  $scope.ready=function(){
+    if(!$scope.flag.isStart){
+      send("READY");
+    }
+  }
   $scope.list=function(){
+    $scope.currentNavigation="user";
     send("LIST");
   };
 
@@ -65,17 +88,18 @@ function handler($scope,$sce){
   };
 
   $scope.games=function(){
+      $scope.currentNavigation="games";
       send("GAMES");
   };
 
-  $scope.watch=function(){
-    if($scope.isRoot){
-      send(["WATCH",$scope.cmd.watch].join(" "));
+  $scope.watch=function(gamename){
+    if($scope.flag.isRoot){
+      send(["WATCH",gamename].join(" "));
     }
   };
 
   $scope.closegame=function(){
-    if($scope.isRoot){
+    if($scope.flag.isRoot){
       send(["CLOSEGAME",$scope.cmd.closegame].join(" "));
     }
   };
@@ -84,7 +108,7 @@ function handler($scope,$sce){
     point=$scope.board[x][y]
     if((!point.isBlack)&&(!point.isWhite)){
       point.isBlack=true;
-      send("move:"+x+","+y);
+      send("MOVE "+[x,y].join(" "));
       // console.log("move:"+x+","+y);
     }
   };
@@ -96,16 +120,16 @@ function handler($scope,$sce){
         send("PONG")
         break;
       case "ROOT":
-        $scope.token=cmd[2];
-        $scope.isLogin=true;
-        $scope.isRoot=true;
+        $scope.token=cmd[1];
+        $scope.flag.isLogin=true;
+        $scope.flag.isRoot=true;
         $scope.list();
         $scope.$apply();
         break;
       case "LOGIN":
         if(cmd[1]=="SUCCESS"){
           $scope.token=cmd[2];
-          $scope.isLogin=true;
+          $scope.flag.isLogin=true;
           $scope.list();
           $scope.$apply();
         }
@@ -119,8 +143,42 @@ function handler($scope,$sce){
           temp.push({username:cmd[i],free:(cmd[i+1]=="free"),status:cmd[i+1]});
         }
         $scope.userList=temp;
-        // // console.log("LIST")
-        // console.log("LIST:"+$scope.userList);
+        // 更新一下 列表
+        $scope.$apply();
+        break;
+      case "GAMES":
+        temp=[];
+        for(var i=1;i<cmd.length;i=i+2){
+          temp.push({gamename:cmd[i],free:(cmd[i+1]=="free"),status:cmd[i+1]});
+        }
+        $scope.gameList=temp;
+        // 更新一下 列表
+        $scope.$apply();
+        break;
+      case "OPENGAME":
+        if(cmd[1]=="SUCCESS"){
+          $scope.flag.showOpenGamePannel=false;
+          $scope.$apply();
+          console.log("OPENGAME SUCCESS");
+        }
+        break;
+      case "START":
+        $scope.game.setting(cmd[1]);
+        $scope.flag.isStart=true;
+        $scope.game.start();
+        break;
+      case "READY":
+        if(cmd[1]=="SUCCESS"){
+          console.log("READY SUCCESS");
+        }else{
+          console.log("READY FAIL");
+        }
+        break;
+      case "CLOSE":
+        if(cmd[2]=="SUCCESS"){
+          send("GAMES");
+        }
+      case "MOVE":
         break;
       // default:
     }

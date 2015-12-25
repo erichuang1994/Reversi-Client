@@ -1,8 +1,13 @@
+
 body {
   height: 409px;
   width: 500px;
   margin: 0;
   font-family: helvetica, sans-serif;
+}
+#center{
+  position: relative;
+  height: 409px;
 }
 #login{
   position: fixed;
@@ -47,10 +52,12 @@ body {
   height: 100%;
 }
 #mapContainer{
-  padding-top: 5em;
+  /*padding-top: 5em;*/
+  position: absolute;
   height:329px;
   width:329px;
   margin: 0 0 0 0;
+  bottom: 0px;
 }
 #chessboard{
   background-color: #FAD388;
@@ -65,11 +72,13 @@ body {
   width:40px;
 }
 #sidebar {
+  position: relative;
   padding-top: 5em;
   width: 171px;
   height: 329px;
+  background-color: cornsilk;
 }
-#sidebar li{
+#userlist li,#gamelist li{
   text-align:left;
   margin: -1px 0 0 0;
   border-top: 1px;
@@ -80,10 +89,23 @@ body {
   border-color: #d9d9d9;
   font-size: 11px;
 }
-#userlist{
+#sidebar ul li:hover > .sidebarbutton {
+  display: inline-block;
+  margin-right: 10px;
+  float: right;
+  font-family: fantasy;
+}
+.sidebarbutton{
+  list-style: none;
+  display: none;
+
+}
+
+#userlist,#gamelist{
   font-family: fantasy;
   width: 100%;
   padding-left: 0px;
+  margin-top: 1px;
 }
 #sidebar .status{
   display: inline-block;
@@ -91,17 +113,75 @@ body {
   font-family: fantasy;
   color:green;
 }
+#navigation{
+  position: absolute;
+  width: 100%;
+  padding-left: 0px;
+  bottom: 0px;
+  margin-bottom: 0;
+  font-family: fantasy;
+}
+#navigation li{
+  cursor: pointer;
+  list-style: none;
+  width: 50%;
+  height: 20px;
+  text-align: center;
+}
+#reserve .button{
+  border: none;
+  border-radius: 5px;
+  width: 90px;
+  background-color: bisque;
+  text-align: center;
+  font-family: inherit;
+  cursor: pointer;
+}
+.user{
+  float: left;
+  margin-left: -1px;
+  border-left: 0;
+  border-right: 1px;
+  border-top: 1px;
+  border-bottom: 1px;
+  border-style: solid;
+  bottom: 0px;
+  color: burlywood;
+  background-color: floralwhite;
+}
+.games{
+  float: right;
+  border-top: 1px;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px;
+  border-style: solid;
+  bottom: 0px;
+  background-color: floralwhite;
+  color: burlywood;
+}
+.games-true{
+  margin-top: 1px;
+  border-top: 0px;
+  background-color: cornsilk;
+}
+.user-true{
+  margin-top: 1px;
+  border-top: 0px;
+  background-color: cornsilk;
+}
 
-li.free-true{
+li.free-true,li.free-false{
   margin: 0;
   padding: 4px 7px 4px 5px;
   cursor: pointer;
   background: #fff;
   display: block;
 }
-li.free-true:hover{
+li.free-true:hover,li.free-false:hover{
   background: #F2F2F5;
 }
+
 img.point {
     position: relative;
     top: 2.5px;

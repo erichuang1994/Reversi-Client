@@ -12,7 +12,7 @@
   <div id="error" ng-if="error">
     <p>出错了。。。</p>
   </div>
-<div id="login" ng-if="!isLogin">
+<div id="login" ng-if="!flag.isLogin">
   <h2>登陆</h2>
   <form ng-submit="login()">
     <label>
@@ -26,24 +26,52 @@
     </label>
   </form>
 </div>
-<div id="container" ng-if="isLogin">
+<div id="container" ng-if="flag.isLogin">
 <div id="sidebar">
-  <ul id="userlist">
+  <ul id="userlist" ng-if="currentNavigation=='user'">
     <li ng-repeat="user in userList track by $index" class="free-{{user.free}}">
       {{user.username}}
       <small  class="status">{{user.status}}</small>
     </li>
   </ul>
+  <ul id="gamelist" ng-if="currentNavigation=='games'">
+    <li ng-repeat="game in gameList track by $index" class="free-{{game.free}}">
+      {{game.gamename}}
+      <small  class="status">{{game.status}}</small>
+      <small class="sidebarbutton" ng-if="!flag.isRoot" ng-click="join(game.gamename)">加入</small>
+      <small class="sidebarbutton" ng-if="flag.isRoot" ng-click="watch(game.gamename)">观战</small>
+      <small class="sidebarbutton" ng-if="flag.isRoot" ng-click="cmd.closegame=game.gamename;closegame()">关闭房间</small>
+    </li>
+  </ul>
+  <ul id="navigation">
+    <li ng-click="list()" class="user user-{{currentNavigation=='user'}}">user</li>
+    <li ng-click="games()" class="games games-{{currentNavigation=='games'}}">games</li>
+  </ul>
+</div>
+<div id="center">
+<div id="reserve">
+  <input ng-if="flag.isRoot" type="submit" class="button" value="openGame" ng-click="flag.showOpenGamePannel=true">
+  <button type="submit" name="ready"  ng-if="!flag.isRoot" ng-click="ready()" class="button">ready</button>
+  <button type="submit" name="leave" ng-click="leave()" class="button">leave</button>
+  <form ng-if="flag.showOpenGamePannel" ng-submit="openGame()">
+    <label>
+      <input type="text" ng-model="cmd.opengame" placeholder="输入游戏的名字" autofocus>
+      <br>
+      <input type="submit" value="创建房间">
+    </label>
+  </form>
+  <button type="submit" name="ready"  ng-if="!flag.isRoot" ng-click="restart()" class="button">restart</button>
 </div>
 <div id="mapContainer">
   <table id="chessboard">
     <tr ng-repeat="row in board track by $index">
       <td  ng-repeat="cell in row track by $index" ng-click="move($parent.$index,$index)">
-        <img class="point" ng-if="cell.isBlack" src="./black.png" alt=""/ >
-        <img  ng-if="cell.isWhite" src="./white.png" alt="" class="point"/ >
+        <img class="point" ng-if="cell==1" src="./black.png" alt=""/ >
+        <img  ng-if="cell==0" src="./white.png" alt="" class="point"/ >
       </td>
     </tr>
   </table>
+</div>
 </div>
 </div>
 </body>
