@@ -33,7 +33,7 @@ class Game{
   }
   start(){
     this.board[3][3]=this.pieces.black;
-    this.board[4][4]=true.pieces.black;
+    this.board[4][4]=this.pieces.black;
     this.board[3][4]=this.pieces.white;
     this.board[4][3]=this.pieces.white;
     this.isBegin=true;
@@ -77,11 +77,11 @@ class Game{
   localMove(x,y){
     move(x,y,this.color)
   }
-  available(){
-    for(var i=0;i<this.direction.length;i++){
-      for()
-    }
-  }
+  // available(){
+  //   for(var i=0;i<this.direction.length;i++){
+  //     for()
+  //   }
+  // }
 
   getBoard(){
     return this.board;

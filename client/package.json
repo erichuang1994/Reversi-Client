@@ -4,7 +4,7 @@
   "description":"",
   "main":"main.js",
   "scripts":{
-    "build":"babel *.es6 -d .",
+    "build":"babel *.es6 -d .&&babel app/*.es6 -d .",
     "start":"electron ."
   },
   "author":"Eric Huang <q465168867@gmail.com>",

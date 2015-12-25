@@ -33,8 +33,7 @@ function handler($scope,$sce){
 
   $scope.currentNavigation='user';
 
-  var game=new Game();
-  $scope.game=game;
+  $scope.game=new Game();
 
   $scope.board=$scope.game.getBoard();
 
@@ -155,6 +154,11 @@ function handler($scope,$sce){
         // 更新一下 列表
         $scope.$apply();
         break;
+      case "JOIN":
+        if(cmd[1]=="SUCCESS"){
+          console.log("JOIN SUCCESS");
+        }
+        break;
       case "OPENGAME":
         if(cmd[1]=="SUCCESS"){
           $scope.flag.showOpenGamePannel=false;
@@ -163,9 +167,12 @@ function handler($scope,$sce){
         }
         break;
       case "START":
+        console.log(typeof($scope.game));
         $scope.game.setting(cmd[1]);
         $scope.flag.isStart=true;
         $scope.game.start();
+        $scope.$apply();
+        console.log("START GAME")
         break;
       case "READY":
         if(cmd[1]=="SUCCESS"){
@@ -178,6 +185,7 @@ function handler($scope,$sce){
         if(cmd[2]=="SUCCESS"){
           send("GAMES");
         }
+        break;
       case "MOVE":
         break;
       // default:
