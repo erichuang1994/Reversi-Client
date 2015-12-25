@@ -4,9 +4,14 @@
   <meta charset="UTF-8">
   <title>reversi</title>
   <link rel="stylesheet" href="ui.css">
-  <script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
+  <link rel="stylesheet" href="../node_modules/angular-sweetalert/node_modules/sweetalert/lib/sweet-alert.css">
+<script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
+<script type="text/javascript" src="../node_modules/angular-sweetalert/SweetAlert.js"></script>
+<script type="text/javascript" src="../node_modules/angular-sweetalert/node_modules/sweetalert/lib/sweet-alert.min.js"></script>
 <script type="text/javascript" src="../node_modules/angular-animate/angular-animate.js"></script>
 <script type="text/javascript" src="./handler.js"></script>
+<script type="text/javascript" src="../node_modules/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript" src="../node_modules/angular-h-sweetalert/dist/ngSweetAlert.js"></script>
 </head>
 <body ng-app="app" ng-controller="main">
   <div id="error" ng-if="error">
@@ -32,6 +37,7 @@
     <li ng-repeat="user in userList track by $index" class="free-{{user.free}}">
       {{user.username}}
       <small  class="status">{{user.status}}</small>
+      <small class="sidebarbutton" ng-if="flag.isRoot" ng-click="kickOut(user.username)">踢了他</small>
     </li>
   </ul>
   <ul id="gamelist" ng-if="currentNavigation=='games'">
@@ -61,13 +67,15 @@
     </label>
   </form>
   <button type="submit" name="ready"  ng-if="!flag.isRoot" ng-click="restart()" class="button">restart</button>
+  <img class="yourcolor" ng-if="game.color=='black'" src="./black.png" alt=""/ >
+  <img  ng-if="game.color=='white'" src="./white.png" alt="" class="yourcolor"/ >
 </div>
 <div id="mapContainer">
   <table id="chessboard">
     <tr ng-repeat="row in board track by $index">
       <td  ng-repeat="cell in row track by $index" ng-click="move($parent.$index,$index)">
-        <img class="point" ng-if="cell==1" src="./black.png" alt=""/ >
-        <img  ng-if="cell==0" src="./white.png" alt="" class="point"/ >
+        <img class="point" ng-if="cell==0" src="./black.png" alt=""/ >
+        <img  ng-if="cell==1" src="./white.png" alt="" class="point"/ >
       </td>
     </tr>
   </table>

@@ -187,3 +187,7 @@ img.point {
     top: 2.5px;
     left: 2.5px;
 }
+
+img.yourcolor{
+  float: right;
+}

@@ -1,16 +1,19 @@
 {
-  "name":"reversi",
-  "version":"1.0.0",
-  "description":"",
-  "main":"main.js",
-  "scripts":{
-    "build":"babel *.es6 -d .&&babel app/*.es6 -d .",
-    "start":"electron ."
+  "name": "reversi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "build": "babel *.es6 -d .&&babel app/*.es6 -d .",
+    "start": "electron ."
   },
-  "author":"Eric Huang <q465168867@gmail.com>",
+  "author": "Eric Huang <q465168867@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "angular": "^1.4.8",
-    "angular-animate": "^1.4.8"
+    "angular-animate": "^1.4.8",
+    "angular-h-sweetalert": "^1.4.6",
+    "angular-sweetalert": "^1.1.0",
+    "sweetalert": "^1.1.3"
   }
 }

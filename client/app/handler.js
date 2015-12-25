@@ -1,20 +1,21 @@
 // Copyright (c) 2015 Eric Huang.MIT license.
 
-
-var app=angular.module('app',['ngAnimate']);
+'use strict';
+var app=angular.module('app',['oitozero.ngSweetAlert']);
 var ipc=require('electron').ipcRenderer;
 var Game=require('./game')
+app.controller('main',['$scope','SweetAlert',handler]);
 
-app.controller('main',['$scope','$sce',handler]);
-
-function handler($scope,$sce){
+function handler($scope,SweetAlert){
   $scope.error=false;
   $scope.count=false;
   $scope.flag={
     isLogin:false,
     isRoot:false,
     isStart:false,
-    showOpenGamePannel:false
+    showOpenGamePannel:false,
+    moveable:false,
+    isJoin:false
   };
   $scope.cmd={
     opengame:'',
@@ -23,8 +24,9 @@ function handler($scope,$sce){
     closegame:'',
     watch:''
   }
-  $scope.userList=[]
-  $scope.gameList=[]
+  $scope.gamename;
+  $scope.userList=[];
+  $scope.gameList=[];
   $scope.user={
     username:'',
     addr:'',
@@ -47,6 +49,7 @@ function handler($scope,$sce){
       ipc.send('msg',msg);
     }
   };
+  // SweetAlert.info({title:"",text:"水能载舟，亦可赛艇",timer:1000});
 
   $scope.login=function () {
       if(!$scope.user.username){
@@ -68,6 +71,7 @@ function handler($scope,$sce){
   };
 
   $scope.join=function(gamename){
+    $scope.gamename=gamename;
     send("JOIN "+gamename);
   }
   $scope.ready=function(){
@@ -80,9 +84,9 @@ function handler($scope,$sce){
     send("LIST");
   };
 
-  $scope.kickOut=function(){
-    if($scope.cmd.kickout!=''){
-      send(["KICKOUT",$scope.cmd.kickout].join(" "));
+  $scope.kickOut=function(username){
+    if(username!=$scope.user.username){
+      send(["KICKOUT",username].join(" "));
     }
   };
 
@@ -104,15 +108,29 @@ function handler($scope,$sce){
   };
 
   $scope.move=function(x,y){
-    point=$scope.board[x][y]
-    if((!point.isBlack)&&(!point.isWhite)){
-      point.isBlack=true;
-      send("MOVE "+[x,y].join(" "));
-      // console.log("move:"+x+","+y);
+    if($scope.flag.moveable==true&&$scope.game.moveable(x,y)){
+      send(["MOVE",$scope.gamename,x,y,$scope.game.color].join(" "));
+    }else{
+      // 不能走的时候发出警告
+      SweetAlert.warn({title:"这里不能下",text:"下棋也要按照基本法啊！",timer:2000});
+      return
     }
   };
+
+  $scope.leave=function(){
+    if($scope.flag.isJoin==true){
+      $scope.reinit();
+      send("LEAVE");
+    }
+  };
+  $scope.reinit=function(){
+     $scope.isStart=false;
+     $scope.game.reinit();
+     $scope.$apply();
+  };
+
   ipc.on('msg',function(event,message){
-    cmd=message.toString().trim().split(" ");
+    var cmd=message.toString().trim().split(" ");
     console.log(cmd)
     switch (cmd[0]) {
       case "PING":
@@ -133,11 +151,11 @@ function handler($scope,$sce){
           $scope.$apply();
         }
         else{
-            alert("水能载舟，亦可赛艇");
+          SweetAlert.warn({title:"密码错误",text:"水能载舟，亦可赛艇",timer:2000});
         }
         break;
       case "LIST":
-        temp=[];
+        var temp=[];
         for(var i=1;i<cmd.length;i=i+2){
           temp.push({username:cmd[i],free:(cmd[i+1]=="free"),status:cmd[i+1]});
         }
@@ -146,7 +164,7 @@ function handler($scope,$sce){
         $scope.$apply();
         break;
       case "GAMES":
-        temp=[];
+        var temp=[];
         for(var i=1;i<cmd.length;i=i+2){
           temp.push({gamename:cmd[i],free:(cmd[i+1]=="free"),status:cmd[i+1]});
         }
@@ -156,19 +174,20 @@ function handler($scope,$sce){
         break;
       case "JOIN":
         if(cmd[1]=="SUCCESS"){
-          console.log("JOIN SUCCESS");
+          $scope.isJoin=true;
+          $scope.game.setname($scope.gamename);
+          SweetAlert.success({title:"",text:"加入成功",timer:2000});
         }
         break;
       case "OPENGAME":
         if(cmd[1]=="SUCCESS"){
           $scope.flag.showOpenGamePannel=false;
           $scope.$apply();
-          console.log("OPENGAME SUCCESS");
+          SweetAlert.success({title:"",text:"创建房间成功",timer:2000});
         }
         break;
       case "START":
-        console.log(typeof($scope.game));
-        $scope.game.setting(cmd[1]);
+        $scope.game.setting(cmd[1].toLowerCase());
         $scope.flag.isStart=true;
         $scope.game.start();
         $scope.$apply();
@@ -181,12 +200,67 @@ function handler($scope,$sce){
           console.log("READY FAIL");
         }
         break;
+      case "YOURTURN":
+        $scope.flag.moveable=true;
+        SweetAlert.info({title:"It's your turn.",text:"慢慢来,比较快.",timer:2000});
+        // alert("轮你了")
+        break;
       case "CLOSE":
         if(cmd[2]=="SUCCESS"){
           send("GAMES");
         }
         break;
+      case "RESULT":
+        if(cmd[2]=="SUCCESS"){
+          alert("Excited!");
+        }else{
+          alert("I'm angry!");
+        }
+        break;
       case "MOVE":
+        $scope.game.move(parseInt(cmd[1]),parseInt(cmd[2]),cmd[3]);
+        // 更新一下页面
+        $scope.$apply();
+        break;
+      case "KICKOUT":
+        if(cmd[1]==$scope.user.username){
+          SweetAlert.swal({
+             title: "你被管理员踹出了房间",
+             text: "年轻人不要作死",
+             type: "warn",
+             showCancelButton: false,
+             confirmButtonColor: "#DD6B55",
+             confirmButtonText: "确定",
+             closeOnConfirm: false},
+             function(){
+               $scope.game.setname("");
+               $scope.reinit();
+             });
+        }else{
+          SweetAlert.swal({
+             title: "管理员信息",
+             text: "用户"+cmd[1]+"被踢出了房间",
+             type: "info",
+             showCancelButton: false,
+             confirmButtonColor: "#DD6B55",
+             confirmButtonText: "确定",
+             closeOnConfirm: false},
+             $scope.reinit
+          );
+        }
+      case "GAMEOVER":
+        // alert(cmd.join(" "));
+        $scope.flag.isStart=false;
+        SweetAlert.swal({
+           title: "",
+           text: cmd.join(" "),
+           type: "info",
+           showCancelButton: false,
+           confirmButtonColor: "#DD6B55",
+           confirmButtonText: "确定",
+           closeOnConfirm: false},
+             $scope.reinit
+         );
         break;
       // default:
     }

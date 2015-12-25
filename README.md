@@ -1,6 +1,6 @@
 ## reversi
 
-
+- 游戏运行逻辑(合法性，当前轮到谁走)交由server处理，客户端预先处理掉非法的步子，并且总是在收到服务器允许走的指令之后才走
 
 ### protocol
 - `Server`
@@ -26,6 +26,15 @@
 	- closegame:
 
 		`CLOSEGAME GAMENAME ROOTTOKEN`
+	- yourturn:
+
+		`YOURTURN ` 告知客户端轮到他走了
+	- move:
+
+		`MOVE X Y COLOR ROOTTOKEN`标示出是什么颜色
+	- start:
+
+		`START COLOR`
 - `Client`
 	- 空格分开
 		- login:
@@ -42,11 +51,11 @@
 			`JOIN GAMENAME TOKEN`
 		- ready:
 
-			`READY GAMENAME TOKEN`
+			`READY  TOKEN`
 
 		- move:
 
-			`MOVE GAMENAME X Y TOKEN`
+			`MOVE GAMENAME X Y COLOR TOKEN`
 
 		- restart:
 
