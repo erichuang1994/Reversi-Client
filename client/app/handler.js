@@ -79,11 +79,20 @@ function handler($scope,SweetAlert){
     $scope.gamename=gamename;
     send("JOIN "+gamename);
   };
+
   $scope.ready=function(){
     if(!$scope.flag.isStart){
       send("READY");
     }
   };
+
+  $scope.restart=function(){
+    if($scope.flag.isStart){
+      send("RESTART");
+    }else{
+      SweetAlert.warning({title:"游戏还没开始呢",text:"太急了吧",timer:2000});
+    }
+  }
   $scope.list=function(){
     $scope.currentNavigation="user";
     send("LIST");
@@ -223,6 +232,29 @@ function handler($scope,SweetAlert){
         $scope.game.start();
         $scope.$apply();
         SweetAlert.info({title:"",text:"游戏开始",timer:2000});
+        break;
+      case "RESTART":
+        if(cmd[1]=="REQUEST"){
+          SweetAlert.swal({
+             title: "restart request",
+             text: "对方请求重新开始游戏",
+             type: "warning",
+             showCancelButton: true,
+             confirmButtonColor: "#DD6B55",confirmButtonText: "好的",
+             cancelButtonText: "不",
+             closeOnConfirm: false,
+             closeOnCancel: false },
+          function(isConfirm){
+             if (isConfirm) {
+                SweetAlert.swal("你同意了请求", "游戏将要重新开始", "success");
+                $scope.restart();
+             } else {
+                SweetAlert.swal("你拒绝了请求", ":)", "error");
+             }
+          });
+        }else if(cmd[1]=="SUCCESS"){
+          $scope.game.reinit();
+        }
         break;
       case "READY":
         if(cmd[1]=="SUCCESS"){

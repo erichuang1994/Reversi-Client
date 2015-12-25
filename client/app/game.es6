@@ -48,7 +48,7 @@ class Game{
     for(var i=0;i<8;i++){
       for(var j=0;j<8;j++){
         this.board[i][j]=-1;
-        this.matrix=false;
+        this.matrix[i][j]=false;
       }
     }
     this.color="";
@@ -179,7 +179,7 @@ class Game{
         this.matrix=false;
       }
     }
-    this.start();
+
   }
   showboard(){
     console.log(this.board);
