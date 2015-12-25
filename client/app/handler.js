@@ -15,14 +15,19 @@ function handler($scope,SweetAlert){
     isStart:false,
     showOpenGamePannel:false,
     moveable:false,
-    isJoin:false
+    isJoin:false,
+    showMessagePannel:false
   };
   $scope.cmd={
     opengame:'',
     kickout:'',
     token:'',
     closegame:'',
-    watch:''
+    watch:'',
+    msg:{
+      user:'',
+      message:''
+    }
   }
   $scope.gamename;
   $scope.userList=[];
@@ -73,12 +78,12 @@ function handler($scope,SweetAlert){
   $scope.join=function(gamename){
     $scope.gamename=gamename;
     send("JOIN "+gamename);
-  }
+  };
   $scope.ready=function(){
     if(!$scope.flag.isStart){
       send("READY");
     }
-  }
+  };
   $scope.list=function(){
     $scope.currentNavigation="user";
     send("LIST");
@@ -110,23 +115,49 @@ function handler($scope,SweetAlert){
   $scope.move=function(x,y){
     if($scope.flag.moveable==true&&$scope.game.moveable(x,y)){
       send(["MOVE",$scope.gamename,x,y,$scope.game.color].join(" "));
+      $scope.flag.moveable=false;
     }else{
       // 不能走的时候发出警告
-      SweetAlert.warn({title:"这里不能下",text:"下棋也要按照基本法啊！",timer:2000});
+      if($scope.flag.moveable==true){
+      SweetAlert.warning({title:"这里不能下",text:"下棋也要按照基本法啊！",timer:2000});
+    }else{
+      SweetAlert.warning({title:"还没轮到你",text:"太急了吧",timer:2000});
+    }
       return
     }
   };
 
+
   $scope.leave=function(){
+    console.log("LEAVE TEST");
     if($scope.flag.isJoin==true){
       $scope.reinit();
+      $scope.game.setname("");
+      $scope.flag.isJoin=false;
+      $scope.$apply();
       send("LEAVE");
+      SweetAlert.success({title:"",text:"离开成功",timer:2000});
     }
   };
+
   $scope.reinit=function(){
      $scope.isStart=false;
      $scope.game.reinit();
-     $scope.$apply();
+  };
+
+  $scope.message=function(){
+    if($scope.flag.isRoot==true){
+      if($scope.cmd.msg.message==""){
+        SweetAlert.error({title:"",text:"消息不能为空"});
+        return
+      }
+      $scope.flag.showMessagePannel=false;
+      if($scope.cmd.msg.user==""){
+        send("MSG "+$scope.cmd.msg.message);
+      }else{
+        send(["MSG",$scope.cmd.msg.user,$scope.cmd.msg.message].join(" "));
+      }
+    }
   };
 
   ipc.on('msg',function(event,message){
@@ -151,7 +182,7 @@ function handler($scope,SweetAlert){
           $scope.$apply();
         }
         else{
-          SweetAlert.warn({title:"密码错误",text:"水能载舟，亦可赛艇",timer:2000});
+          SweetAlert.warning({title:"密码错误",text:"水能载舟，亦可赛艇",timer:2000});
         }
         break;
       case "LIST":
@@ -191,13 +222,28 @@ function handler($scope,SweetAlert){
         $scope.flag.isStart=true;
         $scope.game.start();
         $scope.$apply();
-        console.log("START GAME")
+        SweetAlert.info({title:"",text:"游戏开始",timer:2000});
         break;
       case "READY":
         if(cmd[1]=="SUCCESS"){
           console.log("READY SUCCESS");
         }else{
           console.log("READY FAIL");
+        }
+        break;
+      case "LEAVE":
+        SweetAlert.info({title:"",text:"玩家"+cmd[1]+"离开了游戏",timer:2000});
+        $socpe.reinit();
+        $scope.$apply();
+        break;
+      case "WATCH":
+        if(cmd[1]=="SUCCESS"){
+          $scope.flag.isJoin=true;
+          $scope.game.start();
+          $scope.game.setBoard(cmd[2]);
+          $scope.$apply();
+        }else if(cmd[1]=="FAIL"){
+          SweetAlert.info({title:"",text:"游戏还没开始时不能观战"});
         }
         break;
       case "YOURTURN":
@@ -224,18 +270,19 @@ function handler($scope,SweetAlert){
         break;
       case "KICKOUT":
         if(cmd[1]==$scope.user.username){
+          console.log("kickout here");
           SweetAlert.swal({
              title: "你被管理员踹出了房间",
              text: "年轻人不要作死",
-             type: "warn",
+             type: "warning",
              showCancelButton: false,
              confirmButtonColor: "#DD6B55",
              confirmButtonText: "确定",
-             closeOnConfirm: false},
-             function(){
-               $scope.game.setname("");
-               $scope.reinit();
-             });
+             closeOnConfirm: true}
+          );
+          $scope.game.setname("");
+          $scope.reinit();
+          $scope.$apply();
         }else{
           SweetAlert.swal({
              title: "管理员信息",
@@ -244,10 +291,12 @@ function handler($scope,SweetAlert){
              showCancelButton: false,
              confirmButtonColor: "#DD6B55",
              confirmButtonText: "确定",
-             closeOnConfirm: false},
-             $scope.reinit
+             closeOnConfirm: false}
           );
+          $scope.reinit();
+          $scope.$apply();
         }
+        break;
       case "GAMEOVER":
         // alert(cmd.join(" "));
         $scope.flag.isStart=false;
@@ -258,9 +307,11 @@ function handler($scope,SweetAlert){
            showCancelButton: false,
            confirmButtonColor: "#DD6B55",
            confirmButtonText: "确定",
-           closeOnConfirm: false},
-             $scope.reinit
+           closeOnConfirm: false}
          );
+        break;
+      case "MSG":
+        SweetAlert.info({title:"管理员通知",text:cmd[1]});
         break;
       // default:
     }

@@ -51,6 +51,7 @@ class Game{
         this.matrix=false;
       }
     }
+    this.color="";
     this.isBegin=false;
   }
   move(x,y,color){
@@ -123,7 +124,19 @@ class Game{
   getBoard(){
     return this.board;
   }
-
+  // 用board来更新棋盘考虑到为了方便，从服务器返回棋盘时应将-1输出成3
+  setBoard(boardstr){
+    for(var x=0;x<8;x++)
+      for(var y=0;y<8;y++){
+        var temp=parseInt(boardstr[x*8+y]);
+        if (temp==3){
+          this.board[x][y]=-1;
+        }else{
+          this.board[x][y]=temp;
+        }
+      }
+    this.updateMatrix();
+  }
 // 设定是黑方还是白方
   setting(color){
     this.color=color;

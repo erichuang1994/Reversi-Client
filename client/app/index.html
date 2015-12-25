@@ -56,14 +56,24 @@
 </div>
 <div id="center">
 <div id="reserve">
-  <input ng-if="flag.isRoot" type="submit" class="button" value="openGame" ng-click="flag.showOpenGamePannel=true">
+  <input ng-if="flag.isRoot" type="submit" class="button" value="openGame" ng-click="flag.showOpenGamePannel=true;flag.showMessagePannel=false">
   <button type="submit" name="ready"  ng-if="!flag.isRoot" ng-click="ready()" class="button">ready</button>
   <button type="submit" name="leave" ng-click="leave()" class="button">leave</button>
+  <button type="submit" name="message"  ng-if="flag.isRoot" ng-click="flag.showMessagePannel=true;flag.showOpenGamePannel=false" class="button">message</button>
   <form ng-if="flag.showOpenGamePannel" ng-submit="openGame()">
     <label>
       <input type="text" ng-model="cmd.opengame" placeholder="输入游戏的名字" autofocus>
       <br>
-      <input type="submit" value="创建房间">
+      <input type="submit" value="创建房间" class="button">
+    </label>
+  </form>
+  <form ng-if="flag.showMessagePannel" ng-submit="message()">
+    <label>
+      <input type="text" ng-model="cmd.msg.user" placeholder="用户名，留空为全体用户" autofocus>
+      <br>
+      <input type="text" ng-model="cmd.msg.message" placeholder="消息内容" autofocus>
+      <br>
+      <input type="submit" value="发送信息" class="button" >
     </label>
   </form>
   <button type="submit" name="ready"  ng-if="!flag.isRoot" ng-click="restart()" class="button">restart</button>
