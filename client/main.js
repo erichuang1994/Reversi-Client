@@ -7,7 +7,7 @@ var dgram=require('dgram')
 
 var mainWindow;
 app.on('ready', function() {
-  mainWindow = new BrowserWindow({ width: 800, height: 800, show: true });
+  mainWindow = new BrowserWindow({ width: 500, height: 409, show: true ,useContentSize:true,resizable:false});
   mainWindow.loadURL('file://' + __dirname + '/app/index.html');
 });
 

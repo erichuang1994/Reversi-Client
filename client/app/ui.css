@@ -7,6 +7,7 @@ body {
 }
 #center{
   position: relative;
+  width: 328px;
   height: 409px;
 }
 #login{
@@ -128,7 +129,13 @@ body {
   height: 20px;
   text-align: center;
 }
+#reserve{
+  position: relative;
+}
 #reserve .button{
+  margin-top: 4px;
+  margin-left: 2px;
+  float: left;
   border: none;
   border-radius: 5px;
   width: 90px;
@@ -137,7 +144,11 @@ body {
   font-family: inherit;
   cursor: pointer;
 }
-
+.username{
+  color:#C1C1C1;
+  padding: 2px 6px;
+  float: right;
+}
 .user{
   float: left;
   margin-left: -1px;
@@ -190,5 +201,13 @@ img.point {
 }
 
 img.yourcolor{
-  float: right;
+  position: absolute;
+  top: 40px;
+  right: 0px;
+}
+.round{
+  position: absolute;
+  left: 5px;
+  top: 50px;
+  font-family: fantasy;
 }

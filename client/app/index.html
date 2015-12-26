@@ -77,6 +77,9 @@
     </label>
   </form>
   <button type="submit" name="ready"  ng-if="!flag.isRoot" ng-click="restart()" class="button">restart</button>
+  <small ng-if="flag.isLogin" ng-bind="user.username" class="username"></small>
+  <small ng-if="flag.isStart&&flag.moveable"  class="round">我方回合</small>
+  <small ng-if="flag.isStart&&!flag.moveable" class="round" >对方回合</small>
   <img class="yourcolor" ng-if="game.color=='black'" src="./black.png" alt=""/ >
   <img  ng-if="game.color=='white'" src="./white.png" alt="" class="yourcolor"/ >
 </div>
