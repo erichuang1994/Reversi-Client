@@ -290,6 +290,7 @@ function handler($scope,SweetAlert){
         break;
       case "CLOSE":
         if($scope.flag.isRoot&&cmd[2]=="SUCCESS"){
+        SweetAlert.info({title:"",text:"关闭房间成功",timer:2000});
           send("GAMES");
         }else{
           SweetAlert.info({title:"",text:"管理员关闭了房间",timer:2000});
