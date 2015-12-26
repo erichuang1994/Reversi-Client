@@ -79,7 +79,6 @@ function handler($scope,SweetAlert){
   };
 
   $scope.join=function(gamename){
-    $scope.gamename=gamename;
     send("JOIN "+gamename);
   };
 
@@ -142,7 +141,6 @@ function handler($scope,SweetAlert){
 
 
   $scope.leave=function(){
-    console.log("LEAVE TEST");
     if($scope.flag.isJoin==true){
       $scope.reinit();
       $scope.game.setname("");
@@ -154,7 +152,7 @@ function handler($scope,SweetAlert){
   };
 
   $scope.reinit=function(){
-     $scope.isStart=false;
+     $scope.flag.isStart=false;
      $scope.game.reinit();
   };
 
@@ -217,10 +215,13 @@ function handler($scope,SweetAlert){
         $scope.$apply();
         break;
       case "JOIN":
-        if(cmd[1]=="SUCCESS"){
+        if(cmd[2]=="SUCCESS"){
+          $scope.gamename=cmd[1];
           $scope.flag.isJoin=true;
-          $scope.game.setname($scope.gamename);
+          $scope.game.setname(cmd[1]);
           SweetAlert.success({title:"",text:"加入成功",timer:2000});
+        }else{
+          SweetAlert.success({title:"",text:"加入失败",timer:2000});
         }
         break;
       case "OPENGAME":
@@ -288,8 +289,14 @@ function handler($scope,SweetAlert){
         // alert("轮你了")
         break;
       case "CLOSE":
-        if(cmd[2]=="SUCCESS"){
+        if($scope.flag.isRoot&&cmd[2]=="SUCCESS"){
           send("GAMES");
+        }else{
+          SweetAlert.info({title:"",text:"管理员关闭了房间",timer:2000});
+          $scope.game.setname("");
+          $scope.flag.isJoin=false;
+          $scope.reinit();
+          $scope.$apply();
         }
         break;
       case "RESULT":
@@ -317,6 +324,7 @@ function handler($scope,SweetAlert){
              closeOnConfirm: true}
           );
           $scope.game.setname("");
+          $scope.flag.isJoin=false;
           $scope.reinit();
           $scope.$apply();
         }else{

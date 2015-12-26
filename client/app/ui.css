@@ -145,9 +145,11 @@ body {
   cursor: pointer;
 }
 .username{
+  position: absolute;
+  right: 0px;
+  top: 0px;
   color:#C1C1C1;
   padding: 2px 6px;
-  float: right;
 }
 .user{
   float: left;
