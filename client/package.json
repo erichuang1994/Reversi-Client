@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel *.es6 -d .&&babel app/*.es6 -d .",
     "start": "electron .",
-    "pack": "electron-packager . ReversiClient --platform=darwin --arch=x64 --version=0.35.2 --overwrite"
+    "pack": "electron-packager . ReversiClient --out=out/ --platform=all --arch=x64 --version=0.35.2 --overwrite  --ignore=.git --ignore=out --ignore=node_modules/electron-* --ignore=node_modules/.bin "
   },
   "author": "Eric Huang <q465168867@gmail.com>",
   "license": "MIT",

@@ -65,6 +65,9 @@ function handler($scope,SweetAlert){
       if($scope.user.password!=""){
         send("LOGIN "+[$scope.user.username,$scope.user.password].join(' '));
       }else{
+        if($scope.user.username=="root"){
+          SweetAlert.warning({title:"",text:"普通用户不能取这个名字"});
+        }
         send("LOGIN "+$scope.user.username);
       }
   };
@@ -81,7 +84,8 @@ function handler($scope,SweetAlert){
   };
 
   $scope.ready=function(){
-    if(!$scope.flag.isStart){
+    console.log("ready test");
+    if(!$scope.flag.isStart&&$scope.flag.isJoin){
       send("READY");
     }
   };
@@ -214,7 +218,7 @@ function handler($scope,SweetAlert){
         break;
       case "JOIN":
         if(cmd[1]=="SUCCESS"){
-          $scope.isJoin=true;
+          $scope.flag.isJoin=true;
           $scope.game.setname($scope.gamename);
           SweetAlert.success({title:"",text:"加入成功",timer:2000});
         }
