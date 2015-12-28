@@ -1,6 +1,6 @@
 ### <center>黑白棋设计文档</center>
 
-###### <center>13307130251 黄伟俊</center>
+###### <center>Eric</center>
 #### 总体说明
 - `开发环境`:OS X EI Capitan
 - `语言`:golang(server),Node.js(client)
@@ -11,28 +11,10 @@
   - `server`:在终端下(unix)执行即可(server端目前没有widnwos版本若需要请自行编译（未尝试过))
   - `client`:双击执行
 - `一些截图`:
-  - `登录界面`:
-  ![登录界面](./img/login.png)
-  - `登录失败`:
-  ![登录失败](./img/loginfail.jpg)
-  - `管理员登录成功`(用户名在右上角):
-  ![管理员登录成功](./img/rootlogin.png)
-  - `创建房间`:
-  ![创建房间](./img/opengame.jpg)
-  - `发送信息`:
-  ![发送信息](./img/msg.png)
-  - `观战,关闭房间`(鼠标移到房间上面就会显示):
-  ![观战,关闭房间](./img/watch.png)
-  - `加入房间`(鼠标移到房间上面就会显示):
-  ![加入房间](./img/join.png)
   - `用户状态`(每次点击左下角的user时会更新，暂时不会自动更新):
   ![用户状态](./img/user.png)
-  - `游戏开始`(双方加入同一个房间且准备后游戏就会开始):
-  ![游戏开始](./img/gamebegin.png)
   - `正在游戏`:
   ![正在游戏](./img/ingame.png)
-  - `请求重开`:
-  ![重开](./img/restart.png)
   - `不能走的地方有提示`:
   ![illegal](./img/illegal.png)
   - `观战`(对于正在进行游戏的房间可以进行观战):
@@ -41,12 +23,6 @@
   ![发送信息](./img/sendmsg.png)
   - `踢出玩家`(即kickout,将鼠标移到user栏上想要踢出的玩家名字上即会出现踢出选项):
   ![踢出玩家](./img/kickout.png)
-- `流程说明`: 管理员和普通玩家都通过client登录,server维护游戏运行逻辑(合法性，当前轮到谁走等),处理各种指令。客户端预先处理掉非法的步子，并且总是在收到服务器允许走的指令之后才走。暂时只支持一个玩家同时在一个房间里最多进行一场游戏。
-
-#### 较为详细的说明
-- `Server`：Server端使用了golang编写，保证了良好的并发性与服务器性能,默认端口为3106。golang代码分成三个package,main,hanlder和game.其中main为主控函数，handler为命令处理package,game为游戏逻辑package.具体内容见源代码以及注释（有少量注释),由于server端并不会主动发信息(除了120s会发送一次心跳包以及通知下一步应该谁走).所以协议的详细说明留在client处.
-
-- `Client`:Client使用了Node.js+electron编写，同时使用了angular,将数据与UI很好的分离开来,并且由于使用了electron,可以生成三平台的执行程序(windows,os x,linux)(由于上传附件大小限制并且我也只在os x下测试过，所以我只上传了os x版本，若需要其他版本可以自行打包或者给我发[email](13307130251@gmail.com)),并且可以很方便的用写网页的方法来写naive app,同时使js与本地资源的交互(发送UDP报文)变得方便。管理员和玩家都从Client登录，管理员默认帐号密码分别为root,root.管理员登录之后就可以进行创建房间，关闭房间，发送通知信息，观战，踢人等操作。玩家登录之后则可以进行加入房间，开始游戏等操作。
 
 ### 协议说明
 
