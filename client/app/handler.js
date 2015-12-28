@@ -285,7 +285,7 @@ function handler($scope,SweetAlert){
         break;
       case "YOURTURN":
         $scope.flag.moveable=true;
-        SweetAlert.info({title:"It's your turn.",text:"慢慢来,比较快.",timer:2000});
+        // SweetAlert.info({title:"It's your turn.",text:"慢慢来,比较快.",timer:2000});
         // alert("轮你了")
         break;
       case "CLOSE":
