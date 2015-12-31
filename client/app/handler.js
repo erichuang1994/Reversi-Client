@@ -141,11 +141,11 @@ function handler($scope,SweetAlert){
 
 
   $scope.leave=function(){
+    console.log("click leave button");
     if($scope.flag.isJoin==true){
       $scope.reinit();
       $scope.game.setname("");
       $scope.flag.isJoin=false;
-      $scope.$apply();
       send("LEAVE");
       SweetAlert.success({title:"",text:"离开成功",timer:2000});
     }

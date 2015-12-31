@@ -2,14 +2,7 @@
 
 ###### <center>Eric</center>
 #### 总体说明
-- `开发环境`:OS X EI Capitan
-- `语言`:golang(server),Node.js(client)
-- `代码编译方法`:
-  - golang在server项目主目录下go build即可
-  - Node.js需要安装electron(v0.35.2)以及babel(5.8.20 (babel-core 5.8.34))(如果你需要重新修改es6代码的话),在项目主目录下首先npm install安装依赖，然后npm run build把es5转成es5(如果你改过es6文件),最后npm run start运行程序,如果需要打包程序执行npm run pack(默认三个平台都打包一次,输出在out文件夹下)
-- `执行方法`:
-  - `server`:在终端下(unix)执行即可(server端目前没有widnwos版本若需要请自行编译（未尝试过))
-  - `client`:双击执行
+- [下载链接](https://github.com/erichuang1994/Reversi-Client/releases)
 - `一些截图`:
   - `用户状态`(每次点击左下角的user时会更新，暂时不会自动更新):
   ![用户状态](./img/user.png)
