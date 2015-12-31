@@ -2,20 +2,11 @@
 
 ###### <center>Eric</center>
 #### 总体说明
-- [下载链接](https://github.com/erichuang1994/Reversi-Client/releases)
+- [Release](https://github.com/erichuang1994/Reversi-Client/releases)
 - `一些截图`:
-  - `用户状态`(每次点击左下角的user时会更新，暂时不会自动更新):
-  ![用户状态](./img/user.png)
-  - `正在游戏`:
-  ![正在游戏](./img/ingame.png)
-  - `不能走的地方有提示`:
-  ![illegal](./img/illegal.png)
-  - `观战`(对于正在进行游戏的房间可以进行观战):
-  ![观战](./img/watching.png)
-  - `管理员发送命令`(即msg命令):
-  ![发送信息](./img/sendmsg.png)
-  - `踢出玩家`(即kickout,将鼠标移到user栏上想要踢出的玩家名字上即会出现踢出选项):
-  ![踢出玩家](./img/kickout.png)
+  ![test](./img/aha.gif)
+
+  ![root](./img/root.gif)
 
 ### 协议说明
 
